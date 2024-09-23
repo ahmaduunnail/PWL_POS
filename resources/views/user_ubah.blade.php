@@ -11,7 +11,7 @@
     <a href="/user">Kembali</a>
     <br><br>
     
-    <form action="../ubah_simpan/{{$data->user_id}}" method="post">
+    <form action="{{ url('/user/ubah_simpan/' . $data->user_id) }}" method="post">
         {{ csrf_field() }}
         {{method_field('PUT')}}
 

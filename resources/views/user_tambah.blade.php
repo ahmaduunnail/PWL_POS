@@ -6,7 +6,7 @@
 
 <body>
     <h1>Form Tambah Data Use</h1>
-    <form action="./tambah_simpan" method="post">
+    <form action="{{ url('/user/tambah_simpan') }}" method="post">
         {{ csrf_field() }}
         <label>Username</label>
         <input type="text" name="username" placeholder="Masukkan username">
