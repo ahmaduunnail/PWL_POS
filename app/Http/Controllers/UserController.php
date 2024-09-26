@@ -50,7 +50,7 @@ warning btn-sm">Edit</a> ';
                     url('/user/' . $user->user_id) . '">'
                     . csrf_field() . method_field('DELETE') .
                     '<button type="submit" class="btn btn-danger btn-sm" onclick="return 
-confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';
+confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
                 return $btn;
             })
             ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
@@ -146,7 +146,7 @@ confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';
             'level_id' => $request->level_id
         ]);
 
-        return redirect('/user')->with('success' . "data user berhasil diubah");
+        return redirect('/user')->with('success', "Data user berhasil diubah");
     }
 
     public function destroy(string $id)
@@ -159,7 +159,7 @@ confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';
         try {
             UserModel::destroy($id);
 
-            return redirect('/user')->with('succes', 'Data user berhasil dihaus');
+            return redirect('/user')->with('success', 'Data user berhasil dihapus');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect('/user')->with('error', 'Data user gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
