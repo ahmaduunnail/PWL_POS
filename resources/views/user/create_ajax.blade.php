@@ -29,9 +29,13 @@
                     <small id="error-name" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
+                    <label>Foto Profil</label>
+                    <input type="file" name="file_profil" id="file_profil" class="form-control" required>
+                    <small id="error-file_profil" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-group">
                     <label>Password</label>
-                    <input value="" type="password" name="password" id="password" class="form-control"
-                        required>
+                    <input value="" type="password" name="password" id="password" class="form-control" required>
                     <small id="error-password" class="error-text form-text text-danger"></small>
                 </div>
             </div>
@@ -64,13 +68,22 @@
                     required: true,
                     minlength: 6,
                     maxlength: 20
+                },
+                file_profil: {
+                    required: true,
+                    extension: "jpg|jpeg|png|ico|bmp"
                 }
             },
             submitHandler: function(form) {
+                var formData = new FormData(
+                form); // Jadikan form ke FormData untuk menghandle file 
+
                 $.ajax({
                     url: form.action,
                     type: form.method,
-                    data: $(form).serialize(),
+                    data: formData,
+                    processData: false, // setting processData dan contentType ke false, untuk menghandle file 
+                    contentType: false,
                     success: function(response) {
                         if (response.status) {
                             $('#myModal').modal('hide');

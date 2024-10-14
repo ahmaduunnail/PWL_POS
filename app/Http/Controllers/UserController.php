@@ -6,6 +6,8 @@ use App\Models\LevelModel;
 use App\Models\UserModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -181,7 +183,8 @@ class UserController extends Controller
                 'level_id' => 'required|integer',
                 'username' => 'required|string|min:3|unique:m_user,username',
                 'name' => 'required|string|max:100',
-                'password' => 'required:min:6'
+                'password' => 'required:min:6',
+                'file_profil' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             ];
 
             $validator = Validator::make($request->all(), $rules);
@@ -193,6 +196,20 @@ class UserController extends Controller
                     'msgField' => $validator->errors(),
                 ]);
             }
+
+            // Define the file name using the user's id and the file extension
+            $fileExtension = $request->file('file_profil')->getClientOriginalExtension();
+            $fileName = 'profile_' . Auth::user()->user_id . '.' . $fileExtension;
+            // Check if an existing profile picture exists and delete it
+            $oldFile = 'profile_pictures/' . $fileName;
+            if (Storage::disk('public')->exists($oldFile)) {
+                Storage::disk('public')->delete($oldFile);
+            }
+
+            // Store the new file with the user id as the file name
+            $path = $request->file('file_profil')->storeAs('profile_pictures', $fileName, 'public');
+
+            session(['profile_img_path' => $path]);
 
             UserModel::create($request->all());
             return response()->json([
@@ -220,7 +237,8 @@ class UserController extends Controller
                 'level_id' => 'required|integer',
                 'username' => 'required|max:20|unique:m_user,username,' . $id . ',user_id',
                 'name'     => 'required|max:100',
-                'password' => 'nullable|min:6|max:20'
+                'password' => 'nullable|min:6|max:20',
+                'file_profil' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             ];
 
             // use Illuminate\Support\Facades\Validator; 
@@ -240,6 +258,20 @@ class UserController extends Controller
                     $request->request->remove('password');
                 }
 
+                // Define the file name using the user's id and the file extension
+                $fileExtension = $request->file('file_profil')->getClientOriginalExtension();
+                $fileName = 'profile_' . Auth::user()->user_id . '.' . $fileExtension;
+
+                // Check if an existing profile picture exists and delete it
+                $oldFile = 'profile_pictures/' . $fileName;
+                if (Storage::disk('public')->exists($oldFile)) {
+                    Storage::disk('public')->delete($oldFile);
+                }
+
+                // Store the new file with the user id as the file name
+                $path = $request->file('file_profil')->storeAs('profile_pictures', $fileName, 'public');
+                session(['profile_img_path' => $path]);
+
                 $check->update($request->all());
                 return response()->json([
                     'status'  => true,
@@ -254,19 +286,21 @@ class UserController extends Controller
         }
         return redirect('/');
     }
-    
-    public function confirm_ajax(string $id) {
+
+    public function confirm_ajax(string $id)
+    {
         $user = UserModel::find($id);
 
         return view('user.confirm_ajax', ['user' => $user]);
     }
 
-    public function delete_ajax(Request $request, string $id) {
+    public function delete_ajax(Request $request, string $id)
+    {
         if ($request->ajax() || $request->wantsJson()) {
             $user = UserModel::find($id);
 
             if ($user) {
-                $user -> delete();
+                $user->delete();
                 return response()->json([
                     'status' => true,
                     'message' => 'Data berhasil dihapus'
