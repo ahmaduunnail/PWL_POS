@@ -208,8 +208,7 @@ class UserController extends Controller
 
             // Store the new file with the user id as the file name
             $path = $request->file('file_profil')->storeAs('profile_pictures', $fileName, 'public');
-
-            session(['profile_img_path' => $path]);
+            $request['image_profile'] = $path;
 
             UserModel::create($request->all());
             return response()->json([
@@ -270,8 +269,12 @@ class UserController extends Controller
 
                 // Store the new file with the user id as the file name
                 $path = $request->file('file_profil')->storeAs('profile_pictures', $fileName, 'public');
-                session(['profile_img_path' => $path]);
+                $request['image_profile'] = $path;
 
+                if (!$request->filled('image_profile')) { // jika password tidak diisi, maka hapus dari request 
+                    $request->request->remove('image_profile');
+                }
+                
                 $check->update($request->all());
                 return response()->json([
                     'status'  => true,
