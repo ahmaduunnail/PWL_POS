@@ -44,6 +44,16 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Foto Profil</label>
+                    <div class="col-11">
+                        <input type="file" class="form-control" id="file_profil" name="file_profil" value="{{ old('file_profil') }}"
+                            required>
+                        @error('file_profil')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Password</label>
                     <div class="col-11">
                         <input type="password" class="form-control" id="password" name="password" required>

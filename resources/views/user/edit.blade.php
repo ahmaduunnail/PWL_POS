@@ -18,14 +18,14 @@
 horizontal">
                     @csrf
                     {!! method_field('PUT') !!} <!-- tambahkan baris ini untuk proses edit yang butuh
-                method PUT -->
+                        method PUT -->
                     <div class="form-group row">
                         <label class="col-1 control-label col-form-label">Level</label>
                         <div class="col-11">
                             <select class="form-control" id="level_id" name="level_id" required>
                                 <option value="">- Pilih Level -</option>
                                 @foreach ($level as $item)
-                                    <option value="{{ $item->level_id }}" @if ($item->level_id == $user -> level_id) selected @endif>
+                                    <option value="{{ $item->level_id }}" @if ($item->level_id == $user->level_id) selected @endif>
                                         {{ $item->level_nama }}</option>
                                 @endforeach
                             </select>
@@ -50,6 +50,16 @@ horizontal">
                             <input type="text" class="form-control" id="nama" name="nama"
                                 value="{{ old('nama', $user->name) }}" required>
                             @error('nama')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-1 control-label col-form-label">Foto Profil</label>
+                        <div class="col-11">
+                            <input type="file" class="form-control" id="file_profil" name="file_profil"
+                                value="{{ old('file_profil', $user->name) }}" required>
+                            @error('file_profil')
                                 <small class="form-text text-danger">{{ $message }}</small>
                             @enderror
                         </div>

@@ -92,27 +92,23 @@
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA STOK</h4>
+    <h3 class="text-center">LAPORAN DATA USER</h4>
         <table class="border-all">
             <thead>
                 <tr>
                     <th class="text-center">No</th>
-                    <th>Nama Supplier</th>
-                    <th>Nama Barang</th>
-                    <th>Nama User</th>
-                    <th>Stok Tanggal</th>
-                    <th>Stok Jumlah</th>
+                    <th>Level</th>
+                    <th>Username</th>
+                    <th>Nama</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($stok as $b)
+                @foreach ($user as $b)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $b->supplier->supplier_nama }}</td>
-                        <td>{{ $b->barang->barang_nama }}</td>
-                        <td>{{ $b->user->name }}</td>
-                        <td>{{ $b->stok_tanggal }}</td>
-                        <td>{{ $b->stok_jumlah }}</td>
+                        <td>{{ $b->level->level_nama }}</td>
+                        <td>{{ $b->username }}</td>
+                        <td>{{ $b->name }}</td>
                     </tr>
                 @endforeach
             </tbody>

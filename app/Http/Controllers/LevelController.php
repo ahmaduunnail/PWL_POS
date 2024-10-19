@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\LevelModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -156,11 +157,16 @@ class LevelController extends Controller
         }
     }
 
+    public function show_ajax(string $id)
+    {
+        $level = LevelModel::find($id);
+
+        return view('level.show_ajax', ['level' => $level]);
+    }
+
     public function create_ajax()
     {
-        $level = LevelModel::select('level_id', 'level_nama')->get();
-
-        return view('level.create_ajax')->with('level', $level);
+        return view('level.create_ajax');
     }
 
     public function store_ajax(Request $request)
@@ -261,5 +267,18 @@ class LevelController extends Controller
             }
             return redirect('/');
         }
+    }
+
+    public function export_pdf()
+    {
+        $level = LevelModel::select('level_kode', 'level_nama')
+            ->get();
+
+        $pdf = Pdf::loadView('level.export_pdf', ['level' => $level]);
+        $pdf->setPaper('a4', 'potrait');
+        $pdf->setOption('isRemoteEnabled', true);
+        $pdf->render();
+
+        return $pdf->stream('Data Level' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

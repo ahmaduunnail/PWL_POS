@@ -3,11 +3,12 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Daftar stok</h3>
+            <h3 class="card-title">Daftar transaksi</h3>
             <div class="card-tools">
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">Tambah</a>
-                <a href="{{ url('/stok/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Stok</a>
-                <button onclick="modalAction('{{ url('/stok/create_ajax') }}')" class="btn btn-success">Tambah
+                <a class="btn btn-sm btn-primary mt-1" href="{{ url('transaksi/create') }}">Tambah</a>
+                <a href="{{ url('/transaksi/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export
+                    Transaksi</a>
+                <button onclick="modalAction('{{ url('/transaksi/create_ajax') }}')" class="btn btn-success">Tambah
                     Data(Ajax)</button>
             </div>
         </div>
@@ -18,15 +19,14 @@
             @if (session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
-            <table class="table table-bordered table-sm table-striped table-hover" id="table-stok">
+            <table class="table table-bordered table-sm table-striped table-hover" id="table-transaksi">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Supplier</th>
-                        <th>Barang</th>
                         <th>User</th>
-                        <th>Stok Tanggal</th>
-                        <th>Stok Jumlah</th>
+                        <th>Pembeli</th>
+                        <th>Penjualan Kode</th>
+                        <th>Penjualan Tanggal</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -46,13 +46,13 @@
             });
         }
 
-        var tableStok;
+        var dataTransaksi;
         $(document).ready(function() {
-            tableStok = $('#table-stok').DataTable({
+            dataTransaksi = $('#table-transaksi').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    "url": "{{ url('stok/list') }}",
+                    "url": "{{ url('transaksi/list') }}",
                     "dataType": "json",
                     "type": "POST",
                     "data": function(d) {
@@ -66,25 +66,25 @@
                     orderable: false,
                     searchable: false
                 }, {
-                    data: "supplier.supplier_nama",
+                    data: "user.name",
                     className: "",
                     width: "10%",
                     orderable: true,
                     searchable: true
                 }, {
-                    data: "barang.barang_nama",
+                    data: "pembeli",
                     className: "",
                     width: "37%",
                     orderable: true,
                     searchable: true,
                 }, {
-                    data: "user.name",
+                    data: "penjualan_kode",
                     className: "",
                     width: "10%",
                     orderable: true,
                     searchable: true,
                 }, {
-                    data: "stok_tanggal",
+                    data: "penjualan_tanggal",
                     className: "",
                     width: "10%",
                     orderable: true,
@@ -94,35 +94,29 @@
                             var date = new Date(data);
                             var year = date.getFullYear();
                             var month = ("0" + (date.getMonth() + 1)).slice(-
-                            2); // Add leading zero
+                                2); // Add leading zero
                             var day = ("0" + date.getDate()).slice(-2); // Add leading zero
                             return year + "-" + month + "-" + day; // Format as YYYY-MM-DD
                         }
                         return data; // Return original value if no data
                     }
                 }, {
-                    data: "stok_jumlah",
-                    className: "",
-                    width: "14%",
-                    orderable: true,
-                    searchable: false
-                }, {
                     data: "aksi",
                     className: "text-center",
-                    width: "14%",
+                    width: "25%",
                     orderable: false,
                     searchable: false
                 }]
             });
 
-            $('#table-stok_filter input').unbind().bind().on('keyup', function(e) {
+            $('#table-transaksi_filter input').unbind().bind().on('keyup', function(e) {
                 if (e.keyCode == 13) { // enter key 
-                    tableStok.search(this.value).draw();
+                    tableTransaksi.search(this.value).draw();
                 }
             });
 
             $('.filter_kategori').change(function() {
-                tableStok.draw();
+                tableTransaksi.draw();
             });
         });
     </script>

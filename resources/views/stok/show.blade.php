@@ -7,7 +7,7 @@
             <div class="card-tools"></div>
         </div>
         <div class="card-body">
-            @empty($barang)
+            @empty($stok)
                 <div class="alert alert-danger alert-dismissible">
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!</h5>
                     Data yang Anda cari tidak ditemukan.
@@ -16,31 +16,31 @@
                 <table class="table table-bordered table-striped table-hover table-sm">
                     <tr>
                         <th>ID</th>
-                        <td>{{ $barang->barang_id }}</td>
+                        <td>{{ $stok->stok_id }}</td>
                     </tr>
                     <tr>
-                        <th>Barang kode</th>
-                        <td>{{ $barang->barang_kode }}</td>
+                        <th>Nama Supplier</th>
+                        <td>{{ $stok->supplier->supplier_nama }}</td>
                     </tr>
                     <tr>
-                        <th>Barang nama</th>
-                        <td>{{ $barang->barang_nama }}</td>
+                        <th>Nama Barang</th>
+                        <td>{{ $stok->barang->barang_nama }}</td>
                     </tr>
                     <tr>
-                        <th>Harga beli</th>
-                        <td>{{ $barang->harga_beli }}</td>
+                        <th>Nama User</th>
+                        <td>{{ $stok->user->name }}</td>
                     </tr>
                     <tr>
-                        <th>Harga jual</th>
-                        <td>{{ $barang->harga_jual }}</td>
+                        <th>Stok tanggal</th>
+                        <td>{{ $stok->stok_tanggal->format('Y-m-d') }}</td>
                     </tr>
                     <tr>
-                        <th>Kategori</th>
-                        <td>{{ $barang->kategori->kategori_nama }}</td>
+                        <th>Stok jumlah</th>
+                        <td>{{ $stok->stok_jumlah }}</td>
                     </tr>
                 </table>
             @endempty
-            <a href="{{ url('barang') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
+            <a href="{{ url('stok') }}" class="btn btn-sm btn-default mt-2">Kembali</a>
         </div>
     </div>
 @endsection

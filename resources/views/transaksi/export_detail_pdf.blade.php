@@ -92,31 +92,33 @@
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA STOK</h4>
-        <table class="border-all">
-            <thead>
+    <h3 class="text-center">LAPORAN DATA TRANSAKSI</h3>
+
+    <h4>Nama User: {{ $transaksi->user->name }}</h4>
+    <h4>Pembeli: {{ $transaksi->pembeli }}</h4>
+    <h4>Kode Penjualan: {{ $transaksi->penjualan_kode }}</h4>
+    <h4>Tanggal Penjualan: {{ $transaksi->penjualan_tanggal->format('Y-m-d') }}</h4>
+
+    <table class="border-all">
+        <thead>
+            <tr>
+                <th class="text-center">No</th>
+                <th>Nama Barang</th>
+                <th>Jumlah Barang</th>
+                <th>Harga Barang</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($transaksi->transaksiDetail as $b)
                 <tr>
-                    <th class="text-center">No</th>
-                    <th>Nama Supplier</th>
-                    <th>Nama Barang</th>
-                    <th>Nama User</th>
-                    <th>Stok Tanggal</th>
-                    <th>Stok Jumlah</th>
+                    <td class="text-center">{{ $loop->iteration }}</td>
+                    <td>{{ $b->barang->barang_nama }}</td>
+                    <td>{{ $b->jumlah }}</td>
+                    <td>{{ number_format($b->harga) }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($stok as $b)
-                    <tr>
-                        <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $b->supplier->supplier_nama }}</td>
-                        <td>{{ $b->barang->barang_nama }}</td>
-                        <td>{{ $b->user->name }}</td>
-                        <td>{{ $b->stok_tanggal }}</td>
-                        <td>{{ $b->stok_jumlah }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+            @endforeach
+        </tbody>
+    </table>
 </body>
 
 </html>

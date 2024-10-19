@@ -92,28 +92,25 @@
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA STOK</h4>
+    <h3 class="text-center">LAPORAN DATA SUPPLIER</h4>
         <table class="border-all">
             <thead>
                 <tr>
                     <th class="text-center">No</th>
+                    <th>Kode Supplier</th>
                     <th>Nama Supplier</th>
-                    <th>Nama Barang</th>
-                    <th>Nama User</th>
-                    <th>Stok Tanggal</th>
-                    <th>Stok Jumlah</th>
+                    <th>Alamat Supplier</th>
+                    <th>No. Telp</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($stok as $b)
+                @foreach ($supplier as $b)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
-                        <td>{{ $b->supplier->supplier_nama }}</td>
-                        <td>{{ $b->barang->barang_nama }}</td>
-                        <td>{{ $b->user->name }}</td>
-                        <td>{{ $b->stok_tanggal }}</td>
-                        <td>{{ $b->stok_jumlah }}</td>
-                    </tr>
+                        <td>{{ $b->supplier_kode }}</td>
+                        <td>{{ $b->supplier_nama }}</td>
+                        <td>{{ $b->supplier_alamat }}</td>
+                        <td>{{ $b->no_telp }}</td>
                 @endforeach
             </tbody>
         </table>

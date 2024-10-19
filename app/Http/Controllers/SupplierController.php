@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SupplierModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -161,12 +162,16 @@ class SupplierController extends Controller
         }
     }
 
+    public function show_ajax(string $id)
+    {
+        $supplier = SupplierModel::find($id);
+
+        return view('supplier.show_ajax', ['supplier' => $supplier]);
+    }
 
     public function create_ajax()
     {
-        $supplier = SupplierModel::select('supplier_id', 'supplier_nama')->get();
-
-        return view('supplier.create_ajax')->with('supplier', $supplier);
+        return view('supplier.create_ajax');
     }
 
     public function store_ajax(Request $request)
@@ -271,5 +276,18 @@ class SupplierController extends Controller
             }
             return redirect('/');
         }
+    }
+
+    public function export_pdf()
+    {
+        $supplier = SupplierModel::select('supplier_kode', 'supplier_nama', 'supplier_alamat', 'no_telp')
+            ->get();
+
+        $pdf = Pdf::loadView('supplier.export_pdf', ['supplier' => $supplier]);
+        $pdf->setPaper('a4', 'potrait');
+        $pdf->setOption('isRemoteEnabled', true);
+        $pdf->render();
+
+        return $pdf->stream('Data Supplier' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

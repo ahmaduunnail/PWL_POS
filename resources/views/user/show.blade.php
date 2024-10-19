@@ -28,7 +28,7 @@
                     </tr>
                     <tr>
                         <th>Nama</th>
-                        <td>{{ $user->nama }}</td>
+                        <td>{{ $user->name }}</td>
                     </tr>
                     <tr>
                         <th>Password</th>
