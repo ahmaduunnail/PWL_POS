@@ -61,7 +61,7 @@
                                         Jumlah {{ $detail->jumlah }}
                                     </small>
                                     <small class="badge badge-success">
-                                        Harga {{ number_format($detail->harga) }}
+                                        Harga Rp{{ number_format($detail->harga) }}
                                     </small>
                                 </li>
                             @endforeach

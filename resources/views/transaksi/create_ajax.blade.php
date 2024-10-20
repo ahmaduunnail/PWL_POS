@@ -48,6 +48,11 @@
                             <!-- List of transaction details will go here -->
                         </ul>
                     </div>
+                    <div class="card-footer clearfix">
+                        <button type="button" id="add-barang" class="btn btn-primary float-right"><i
+                                class="fas fa-plus"></i> Add
+                            Barang</button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -58,38 +63,41 @@
     </div>
 
     <!-- Modal for adding a new transaction detail (barang) -->
-    <div id="modal-tambah-barang" class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tambah Barang</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="barang_id">Barang</label>
-                    <select name="barang_id" id="barang_id" class="form-control">
-                        <option value="">- Pilih Barang -</option>
-                        @foreach ($barang as $b)
-                            <option value="{{ $b->barang_id }}">{{ $b->barang_nama }}</option>
-                        @endforeach
-                    </select>
-                    <small id="error-barang_id" class="error-text form-text text-danger"></small>
+    <div id="modal-tambah-barang" class="modal fade animate shake" tabindex="-1"
+        data-backdrop="static"data-keyboard="false" data-width="25%">
+        <div id="modal-tambah" class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Barang</h5>
+                    <button type="button" class="close" id="close-tambah" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label for="jumlah">Jumlah</label>
-                    <input type="number" name="jumlah" id="jumlah" class="form-control">
-                    <small id="error-jumlah" class="error-text form-text text-danger"></small>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="barang_id">Barang</label>
+                        <select name="barang_id" id="barang_id" class="form-control">
+                            <option value="">- Pilih Barang -</option>
+                            @foreach ($barang as $b)
+                                <option value="{{ $b->barang_id }}">{{ $b->barang_nama }}</option>
+                            @endforeach
+                        </select>
+                        <small id="error-barang_id" class="error-text form-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="jumlah">Jumlah</label>
+                        <input type="number" name="jumlah" id="jumlah" class="form-control">
+                        <small id="error-jumlah" class="error-text form-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="harga">Harga</label>
+                        <input type="number" name="harga" id="harga" class="form-control">
+                        <small id="error-harga" class="error-text form-text text-danger"></small>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="harga">Harga</label>
-                    <input type="number" name="harga" id="harga" class="form-control">
-                    <small id="error-harga" class="error-text form-text text-danger"></small>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-barang">Simpan</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="save-barang">Simpan</button>
             </div>
         </div>
     </div>
@@ -100,12 +108,24 @@
 
     $(document).ready(function() {
         // Adjust z-index for multiple modals
-        $('#modal-tambah-barang').on('show.bs.modal', function() {
-            var zIndex = 1060 + ($('#modal-tambah-barang').data('bs.modal') || 0);
-            $(this).css('z-index', zIndex);
-            setTimeout(function() {
-                $('.modal-backdrop').last().css('z-index', zIndex - 1);
-            }, 0);
+        // $('#modal-tambah-barang').on('show.bs.modal', function() {
+        //     var zIndex = 1060 + ($('#modal-tambah-barang').data('bs.modal') || 0);
+        //     $(this).css('z-index', zIndex);
+        //     setTimeout(function() {
+        //         $('.modal-backdrop').last().css('z-index', zIndex - 1);
+        //     }, 0);
+        // });
+
+        // Add listener for the third modal
+        $(document).on('click', '#close-tambah', function() {
+            // Show the edit modal
+            $("#modal-tambah-barang").modal('hide');
+        });
+
+        // Add listener for the third modal
+        $(document).on('click', '#add-barang', function() {
+            // Show the edit modal
+            $("#modal-tambah-barang").modal('show');
         });
 
 
@@ -130,7 +150,7 @@
             <li id="detail-${detailId}">
                 <span class="text">${barang_text}</span>
                 <small class="badge badge-secondary">Jumlah ${jumlah}</small>
-                <small class="badge badge-success">Harga ${Number(harga).toLocaleString()}</small>
+                <small class="badge badge-success">Harga Rp${Number(harga).toLocaleString()}</small>
                 <button type="button" class="btn btn-danger btn-sm float-right remove-detail" data-id="${detailId}">Remove</button>
                 <input type="hidden" name="transaksi_details[${detailId}][barang_id]" value="${barang_id}">
                 <input type="hidden" name="transaksi_details[${detailId}][jumlah]" value="${jumlah}">

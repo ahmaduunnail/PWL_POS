@@ -42,6 +42,17 @@
                         <td>{{ $user->name }}</td>
                     </tr>
                     <tr>
+                        <th>Foto Profil</th>
+                        <td>
+                            @if ($user->image_profile != "")
+                                <img id="profile-picture" src="{{ asset('storage/' . $user->image_profile) }}"
+                                    alt="Profile Picture" class="brand-image img-circle elevation-3 w-25 h-25">
+                            @else
+                                <span>Ra enek mas</span>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
                         <th>Password</th>
                         <td>********</td>
                     </tr>
