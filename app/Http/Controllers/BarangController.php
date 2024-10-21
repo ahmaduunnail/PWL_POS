@@ -63,6 +63,14 @@ class BarangController extends Controller
             ->make(true);
     }
 
+    public function barang_id($id)
+    {
+        $barang = BarangModel::find($id);
+        return response()->json((object) [
+            'harga' => $barang->harga_beli
+        ]);
+    }
+
     public function create()
     {
         $breadcrumb = (object) [
@@ -89,8 +97,6 @@ class BarangController extends Controller
             'harga_jual' => 'required|integer',
             'kategori_id' => 'required|integer'
         ]);
-
-        // dd($request->kategori_id);
 
         BarangModel::create([
             'kategori_id' => $request->kategori_id,

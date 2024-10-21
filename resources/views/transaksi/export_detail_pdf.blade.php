@@ -77,7 +77,8 @@
 <body>
     <table class="border-bottom-header">
         <tr>
-            <td width="15%" class="text-center"><img src="{{ asset('polinema-bw.png') }}" style="width: 60; height= 60;"></td>
+            <td width="15%" class="text-center"><img src="{{ asset('polinema-bw.png') }}" style="width: 60; height= 60;">
+            </td>
             <td width="85%">
                 <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN
                     PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
@@ -109,14 +110,20 @@
             </tr>
         </thead>
         <tbody>
+            {{ $subtotal = 0 }}
             @foreach ($transaksi->transaksiDetail as $b)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
                     <td>{{ $b->barang->barang_nama }}</td>
                     <td>{{ $b->jumlah }}</td>
-                    <td>{{ number_format($b->harga) }}</td>
+                    <td>Rp{{ number_format($b->harga) }}</td>
                 </tr>
+                {{ $subtotal += $b->jumlah * $b->harga }}
             @endforeach
+            <tr>
+                <th colspan="3">SubTotal</th>
+                <td>Rp{{ number_format($subtotal) }}</td>
+            </tr>
         </tbody>
     </table>
 </body>

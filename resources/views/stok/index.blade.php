@@ -5,8 +5,11 @@
         <div class="card-header">
             <h3 class="card-title">Daftar stok</h3>
             <div class="card-tools">
-                <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">Tambah</a>
-                <a href="{{ url('/stok/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Stok</a>
+                <button onclick="modalAction('{{ url('/stok/import') }}')" class="btn btn-info">Import Stok</button>
+                <a href="{{ url('/stok/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export
+                    Stok</a>
+                <a href="{{ url('/stok/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export
+                    Stok</a>
                 <button onclick="modalAction('{{ url('/stok/create_ajax') }}')" class="btn btn-success">Tambah
                     Data(Ajax)</button>
             </div>
@@ -94,7 +97,7 @@
                             var date = new Date(data);
                             var year = date.getFullYear();
                             var month = ("0" + (date.getMonth() + 1)).slice(-
-                            2); // Add leading zero
+                                2); // Add leading zero
                             var day = ("0" + date.getDate()).slice(-2); // Add leading zero
                             return year + "-" + month + "-" + day; // Format as YYYY-MM-DD
                         }

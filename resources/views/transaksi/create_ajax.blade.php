@@ -104,17 +104,45 @@
 </form>
 
 <script>
-    let transaksiDetails = [];
-
     $(document).ready(function() {
-        // Adjust z-index for multiple modals
-        // $('#modal-tambah-barang').on('show.bs.modal', function() {
-        //     var zIndex = 1060 + ($('#modal-tambah-barang').data('bs.modal') || 0);
-        //     $(this).css('z-index', zIndex);
-        //     setTimeout(function() {
-        //         $('.modal-backdrop').last().css('z-index', zIndex - 1);
-        //     }, 0);
-        // });
+        $('#barang_id').change(function() {
+            // Get the selected barang ID
+            let barang_id = $(this).val();
+
+            // Check if a valid barang is selected
+            if (barang_id) {
+                // Make an AJAX request to fetch the harga based on the barang ID
+                $.ajax({
+                    url: "{{ url('/barang') }}/" + barang_id + "/json",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        // If successful, populate the harga field
+                        if (data && data.harga) {
+                            $('#harga').val(data.harga);
+                        } else {
+                            $('#harga').val('');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Harga not found for the selected barang.'
+                            });
+                        }
+                    },
+                    error: function() {
+                        $('#harga').val('');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to fetch harga. Please try again.'
+                        });
+                    }
+                });
+            } else {
+                // Clear the harga field if no valid barang is selected
+                $('#harga').val('');
+            }
+        });
 
         // Add listener for the third modal
         $(document).on('click', '#close-tambah', function() {
@@ -127,7 +155,6 @@
             // Show the edit modal
             $("#modal-tambah-barang").modal('show');
         });
-
 
         // Save the barang and append it to the todo list
         $("#save-barang").on("click", function() {
@@ -147,15 +174,15 @@
 
             let detailId = Date.now(); // Unique ID for each entry
             let detailItem = `
-            <li id="detail-${detailId}">
-                <span class="text">${barang_text}</span>
-                <small class="badge badge-secondary">Jumlah ${jumlah}</small>
-                <small class="badge badge-success">Harga Rp${Number(harga).toLocaleString()}</small>
-                <button type="button" class="btn btn-danger btn-sm float-right remove-detail" data-id="${detailId}">Remove</button>
-                <input type="hidden" name="transaksi_details[${detailId}][barang_id]" value="${barang_id}">
-                <input type="hidden" name="transaksi_details[${detailId}][jumlah]" value="${jumlah}">
-                <input type="hidden" name="transaksi_details[${detailId}][harga]" value="${harga}">
-            </li>`;
+        <li id="detail-${detailId}">
+            <span class="text">${barang_text}</span>
+            <small class="badge badge-secondary">Jumlah ${jumlah}</small>
+            <small class="badge badge-success">Harga Rp${Number(harga).toLocaleString()}</small>
+            <button type="button" class="btn btn-danger btn-sm float-right remove-detail" data-id="${detailId}">Remove</button>
+            <input type="hidden" name="transaksi_details[${detailId}][barang_id]" value="${barang_id}">
+            <input type="hidden" name="transaksi_details[${detailId}][jumlah]" value="${jumlah}">
+            <input type="hidden" name="transaksi_details[${detailId}][harga]" value="${harga}">
+        </li>`;
 
             $(".todo-list").append(detailItem);
 

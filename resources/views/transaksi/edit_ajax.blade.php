@@ -189,6 +189,45 @@
     </form>
     <script>
         $(document).ready(function() {
+            $('#barang_id').change(function() {
+                // Get the selected barang ID
+                let barang_id = $(this).val();
+
+                // Check if a valid barang is selected
+                if (barang_id) {
+                    // Make an AJAX request to fetch the harga based on the barang ID
+                    $.ajax({
+                        url: "{{ url('/barang') }}/" + barang_id + "/json",
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            // If successful, populate the harga field
+                            if (data && data.harga) {
+                                $('#harga').val(data.harga);
+                            } else {
+                                $('#harga').val('');
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Harga not found for the selected barang.'
+                                });
+                            }
+                        },
+                        error: function() {
+                            $('#harga').val('');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to fetch harga. Please try again.'
+                            });
+                        }
+                    });
+                } else {
+                    // Clear the harga field if no valid barang is selected
+                    $('#harga').val('');
+                }
+            });
+
             // Add listener for the second modal
             $(document).on('click', '#close-edit', function() {
                 // Show the edit modal
