@@ -35,8 +35,8 @@ class BarangController extends Controller
     {
         $barang = BarangModel::select('barang_id', 'barang_kode', 'barang_nama', 'harga_beli', 'harga_jual', 'kategori_id')->with('kategori');
 
-        if ($request->kategori_id) {
-            $barang->where('kategori_id', $request->kategori_id);
+        if ($request->filter_kategori) {
+            $barang->where('kategori_id', $request->filter_kategori);
         }
 
         return DataTables::of($barang)
