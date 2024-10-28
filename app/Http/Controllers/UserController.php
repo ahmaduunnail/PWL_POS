@@ -268,9 +268,11 @@ class UserController extends Controller
                 'password' => $request->password, // hash the password
             ];
 
+            $user = UserModel::create($newReq);
+
             // Handle profile image file upload
             $fileExtension = $request->file('file_profil')->getClientOriginalExtension();
-            $fileName = 'profile_' . Auth::user()->user_id . '.' . $fileExtension;
+            $fileName = 'profile_' . $user->user_id . '.' . $fileExtension;
 
             // Check if an existing profile picture exists and delete it
             $oldFile = 'profile_pictures/' . $fileName;
@@ -280,13 +282,11 @@ class UserController extends Controller
 
             // Store the new file with the user id as the file name
             $path = $request->file('file_profil')->storeAs('profile_pictures', $fileName, 'public');
-            session(['profile_img_path' => Auth::user()->image_profile]);
 
             // Add the profile file name to the new request data
-            $newReq['image_profile'] = $path;
-
-            // Create the new user record in the database
-            UserModel::create($newReq);
+            $user = UserModel::find($user->user_id);
+            $user->image_profile = $path;
+            $user->save();    
 
             return response()->json([
                 'status'  => true,
