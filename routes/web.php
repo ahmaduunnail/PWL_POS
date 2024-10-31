@@ -206,6 +206,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export_excel', [TransaksiController::class, 'export_excel']);
             Route::get('/export_pdf', [TransaksiController::class, 'export_pdf']);
             Route::get('{id}/export_detail_pdf', [TransaksiController::class, 'export_detail_pdf']);
+            Route::get('{id}/export_detail_excel', [TransaksiController::class, 'export_detail_excel']);
             Route::delete('/{id}', [TransaksiController::class, 'destroy']);
         });
     });

@@ -47,7 +47,8 @@ class TransaksiController extends Controller
                 //     url('/transaksi/' . $transaksi->transaksi_id) . '">'
                 //     . csrf_field() . method_field('DELETE') .
                 //     '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">Hapus</button></form>';
-                $btn = '<a href="' . url('/transaksi/' . $transaksi->penjualan_id . '/export_detail_pdf') . '" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Detail Transaksi</a> ';
+                $btn = '<a href="' . url('/transaksi/' . $transaksi->penjualan_id . '/export_detail_excel') . '" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Detail Transaksi</a> ';
+                $btn .= '<a href="' . url('/transaksi/' . $transaksi->penjualan_id . '/export_detail_pdf') . '" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export Detail Transaksi</a> ';
                 $btn  .= '<button onclick="modalAction(\'' . url('/transaksi/' . $transaksi->penjualan_id .
                     '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/transaksi/' . $transaksi->penjualan_id .
@@ -436,6 +437,71 @@ class TransaksiController extends Controller
 
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = 'Data Transaksi ' . date('Y-m-d H:i:s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, dMY H:i:s') . 'GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+    }
+
+    public function export_detail_excel($id)
+    {
+        $transaksi = TransaksiModel::with(['user', 'transaksiDetail.barang'])->find($id);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Nama Barang');
+        $sheet->setCellValue('C1', 'Jumlah Barang');
+        $sheet->setCellValue('D1', 'Harga Barang');
+
+        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+
+        $no = 1;
+        $baris = 2;
+        $totalTransaksi = 0;
+        foreach ($transaksi->transaksiDetail as $key => $value) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $value->barang->barang_nama);
+            $sheet->setCellValue('C' . $baris, $value->jumlah);
+            $sheet->setCellValue('D' . $baris, "Rp " . number_format($value->harga));
+            $baris++;
+            $totalTransaksi += $value->harga * $value->jumlah;
+            $no++;
+        }
+
+        $sheet->mergeCells('A' . $baris . ':C' . $baris);
+        $sheet->setCellValue('A' . $baris, "SubTotal");
+        $sheet->setCellValue('D' . $baris, "Rp " . number_format($totalTransaksi));
+        $sheet->getStyle('A' . $baris . ':D' . $baris)->getFont()->setBold(true);
+
+        $sheet->setCellValue('A' . $baris + 2, 'Nama user');
+        $sheet->setCellValue('B' . $baris + 2, $transaksi->user->name);
+        $sheet->setCellValue('A' . $baris + 3, 'Pembeli');
+        $sheet->setCellValue('B' . $baris + 3, $transaksi->pembeli);
+        $sheet->setCellValue('A' . $baris + 4, 'Kode Penjualan');
+        $sheet->setCellValue('B' . $baris + 4, $transaksi->penjualan_kode);
+        $sheet->setCellValue('A' . $baris + 5, 'Tanggal Penjualan');
+        $sheet->setCellValue('B' . $baris + 5, $transaksi->penjualan_tanggal->format('Y-m-d'));
+        $sheet->getStyle('A' . $baris + 2 . ':A' . $baris + 5)->getFont()->setBold(true);
+        $sheet->getStyle('B' . $baris + 2 . ':B' . $baris + 5)->getFont()->setBold(true);
+
+        foreach (range('A', 'D') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        $sheet->setTitle('Data Detail Transaksi');
+
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data Detail Transaksi, id ' . $id . ", tanggal " . $transaksi->penjualan_tanggal->format('Y-m-d') . '.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename . '"');

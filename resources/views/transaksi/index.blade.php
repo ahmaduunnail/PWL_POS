@@ -76,7 +76,7 @@
                 }, {
                     data: "pembeli",
                     className: "",
-                    width: "37%",
+                    width: "25%",
                     orderable: true,
                     searchable: true,
                 }, {
@@ -105,7 +105,7 @@
                 }, {
                     data: "aksi",
                     className: "text-center",
-                    width: "25%",
+                    width: "35%",
                     orderable: false,
                     searchable: false
                 }]
