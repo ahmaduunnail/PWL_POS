@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,11 +14,27 @@ class UserModel extends Authenticatable implements JWTSubject
 
     protected $table = 'm_user';
     protected $primaryKey = 'user_id';
-    protected $fillable = ['level_id', 'username', 'name', 'password', 'image_profile', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'level_id',
+        'username',
+        'name',
+        'password',
+        'image_profile',
+        'image',
+        'created_at',
+        'updated_at'
+    ];
 
     protected $hidden = ['password'];
 
     protected $casts = ['password' => 'hashed'];
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn($image) => url('/storage/posts/' . $image)
+        );
+    }
 
     public function getJWTIdentifier()
     {
